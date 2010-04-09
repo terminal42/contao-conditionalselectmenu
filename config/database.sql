@@ -14,3 +14,4 @@
 CREATE TABLE `tl_form_field` (
   `conditionField` int(10) NOT NULL default '0',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+

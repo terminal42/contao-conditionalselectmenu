@@ -1,13 +1,13 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
- * TYPOlight webCMS
- * Copyright (C) 2005 Leo Feyer
+ * TYPOlight Open Source CMS
+ * Copyright (C) 2005-2010 Leo Feyer
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
- * version 2.1 of the License, or (at your option) any later version.
+ * version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,17 +16,19 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
- * Software Foundation website at http://www.gnu.org/licenses/.
+ * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Andreas Schempp 2009
+ * @copyright  Andreas Schempp 2008-2010
  * @author     Andreas Schempp <andreas@schempp.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @version    $Id$
  */
 
 
 class FormConditionalSelectMenu extends FormSelectMenu
 {
+
 	/**
 	 * Add specific attributes
 	 * @param string
@@ -81,7 +83,6 @@ class FormConditionalSelectMenu extends FormSelectMenu
 		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect.js';
 		
 		$strOptions = '';
-		$strOptionsJS = '<script type="text/javascript">var ctrl_'.$this->strId.'_options = new Array(); ';
 		$strClass = 'select';
 
 		if ($this->multiple)
@@ -110,18 +111,8 @@ class FormConditionalSelectMenu extends FormSelectMenu
 
 			$arrOptgroups = array();
 			
-			$strOptionsJS .= sprintf("ctrl_%s_options['%s'] = new Array();\n", $this->strId, specialchars($strKey));
-
 			foreach ($arrOption as $arrOptgroup)
 			{
-				$strOptionsJS .= sprintf("keys = new Array('value', 'label'%s);\nvar values = new Array('%s', '%s'%s);\nctrl_%s_options['%s'].include(values.associate(keys));\n",
-									((is_array($this->varValue) && in_array($arrOptgroup['value'] , $this->varValue)) || $this->varValue == $arrOptgroup['value']) ? ", 'default'" : '',
-									$arrOptgroup['value'],
-									$arrOptgroup['label'],
-									((is_array($this->varValue) && in_array($arrOptgroup['value'] , $this->varValue)) || $this->varValue == $arrOptgroup['value']) ? ", 'true'" : '',
-									$this->strId,
-									specialchars($strKey));
-			
 				$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
 										   specialchars($arrOptgroup['value']),
 										   ((is_array($this->varValue) && in_array($arrOptgroup['value'] , $this->varValue) || $this->varValue == $arrOptgroup['value']) ? ' selected="selected"' : ''),
@@ -131,7 +122,22 @@ class FormConditionalSelectMenu extends FormSelectMenu
 			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strKey), implode('', $arrOptgroups));
 		}
 		
-		$strOptionsJS .= sprintf("window.addEvent('domready', function() { ConditionalSelect.init('ctrl_%s', 'ctrl_%s', ctrl_%s_options, ". ($this->includeBlankOption ? 'true' : 'false') .", '" . (strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-') . "') } );</script>", $this->strId, $this->conditionField, $this->strId);
+// Prepare Javascript
+		if ($this->includeBlankOption)
+		{
+			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
+		}
+		
+		$strOptionsJS = "
+<script type=\"text/javascript\">
+<!--//--><![CDATA[//><!--
+window.addEvent('domready', function()
+{
+	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "')" . $strClassOptions . ");
+});
+//--><!]]>
+</script>
+";
 
 		return sprintf('<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
 						$this->strName,
