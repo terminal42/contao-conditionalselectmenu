@@ -36,7 +36,7 @@ class ConditionalSelectMenu extends SelectMenu
 	public function generate()
 	{
 		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect.js';
-		
+
 		$strOptions = '';
 		$strClass = 'tl_select';
 
@@ -50,6 +50,17 @@ class ConditionalSelectMenu extends SelectMenu
 		if (!count($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
+		}
+		
+		// Get labels from parent select menu
+		$arrParentOptions = array();
+		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
+		{
+			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
+		}
+		elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options']))
+		{
+			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
 		}
 
 		foreach ($this->arrOptions as $strKey=>$arrOption)
@@ -74,7 +85,7 @@ class ConditionalSelectMenu extends SelectMenu
 										   $arrOptgroup['label']);
 			}
 
-			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strKey), implode('', $arrOptgroups));
+			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars(strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey), implode('', $arrOptgroups));
 		}
 		
 		// Prepare Javascript

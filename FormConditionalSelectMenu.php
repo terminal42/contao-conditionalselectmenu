@@ -96,6 +96,17 @@ class FormConditionalSelectMenu extends FormSelectMenu
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
 		}
+		
+		// Get labels from parent select menu
+		$arrParentOptions = array();
+		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
+		{
+			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
+		}
+		elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options']))
+		{
+			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
+		}
 
 		foreach ($this->arrOptions as $strKey=>$arrOption)
 		{
@@ -119,7 +130,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 										   $arrOptgroup['label']);
 			}
 
-			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strKey), implode('', $arrOptgroups));
+			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars(strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey), implode('', $arrOptgroups));
 		}
 		
 // Prepare Javascript
