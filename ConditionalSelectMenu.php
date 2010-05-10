@@ -43,7 +43,7 @@ class ConditionalSelectMenu extends SelectMenu
 		if ($this->multiple)
 		{
 			$this->strName .= '[]';
-			$strClass = 'tl_multiselect';
+			$strClass = 'tl_mselect';
 		}
 
 		// Add empty option (XHTML) if there are none

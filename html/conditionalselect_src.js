@@ -71,7 +71,6 @@ var ConditionalSelect = new Class(
 			}
 		}
 
-
 		// Add the correct options
 		for( s=0; s<currentSelection.length; s++ )
 		{
@@ -85,7 +84,7 @@ var ConditionalSelect = new Class(
 				{
 					optGroup = true;
 					parentNode = new Element('optgroup', {
-						label: currentSelect
+						label: (this.parent.getFirst('[value=ch]').get('text') ? this.parent.getFirst(('[value='+currentSelect+']')).get('text') : currentSelect)
 					});
 				}
 				
