@@ -20,13 +20,14 @@ var ConditionalSelect = new Class(
 	/**
 	 * Initialize dynamic menu
 	 */	
-	initialize: function(element, parent, data, options)
+	initialize: function(element, parent, data, values, options)
 	{
 		this.setOptions(options);
 		
 		this.element = $(element);
 		this.parent = $(parent);
 		this.data = data;
+		this.values = new Hash(values);
 		
 		// Register event
 		this.parent.addEvent('change', function(event) { this.update(event.target) }.bind(this));
@@ -96,7 +97,7 @@ var ConditionalSelect = new Class(
 					
 					option.set('html', this.data[currentSelect][i]['label']);
 					
-					if (this.data[currentSelect][i]['default'] == 'true')
+					if ((!this.values && this.data[currentSelect][i]['default'] == 'true') || (this.values && this.values.hasValue(this.data[currentSelect][i]['value'])))
 					{
 						option.selected = true;
 					}

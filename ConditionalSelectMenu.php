@@ -99,7 +99,7 @@ class ConditionalSelectMenu extends SelectMenu
 <!--//--><![CDATA[//><!--
 window.addEvent('domready', function()
 {
-	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "')" . $strClassOptions . ");
+	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "'), JSON.decode('" . str_replace("'", "\'", json_encode($this->varValue)) . "')" . $strClassOptions . ");
 });
 //--><!]]>
 </script>
