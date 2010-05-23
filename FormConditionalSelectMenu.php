@@ -97,6 +97,12 @@ class FormConditionalSelectMenu extends FormSelectMenu
 			$this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
 		}
 		
+		// Make sure values is an array
+		if (!is_array($this->varValue))
+		{
+			$this->varValue = array($this->varValue);
+		}
+		
 		// Get labels from parent select menu
 		$arrParentOptions = array();
 		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
@@ -114,7 +120,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 			{
 				$strOptions .= sprintf('<option value="%s"%s>%s</option>',
 										 specialchars($arrOption['value']),
-										 (((is_array($this->varValue) && in_array($arrOption['value'] , $this->varValue)) || $this->varValue == $arrOption['value']) ? ' selected="selected"' : ''),
+										 (in_array($arrOption['value'] , $this->varValue) ? ' selected="selected"' : ''),
 										 $arrOption['label']);
 
 				continue;
@@ -126,7 +132,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 			{
 				$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
 										   specialchars($arrOptgroup['value']),
-										   ((is_array($this->varValue) && in_array($arrOptgroup['value'] , $this->varValue) || $this->varValue == $arrOptgroup['value']) ? ' selected="selected"' : ''),
+										   (in_array($arrOptgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
 										   $arrOptgroup['label']);
 			}
 
