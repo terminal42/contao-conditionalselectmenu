@@ -85,7 +85,7 @@ var ConditionalSelect = new Class(
 				{
 					optGroup = true;
 					parentNode = new Element('optgroup', {
-						label: (this.parent.getFirst('[value=ch]').get('text') ? this.parent.getFirst(('[value='+currentSelect+']')).get('text') : currentSelect)
+						label: (this.parent.getFirst(('[value='+currentSelect+']')).get('text') ? this.parent.getFirst(('[value='+currentSelect+']')).get('text') : currentSelect)
 					});
 				}
 				
@@ -97,7 +97,7 @@ var ConditionalSelect = new Class(
 					
 					option.set('html', this.data[currentSelect][i]['label']);
 					
-					if ((!this.values && this.data[currentSelect][i]['default'] == 'true') || (this.values && this.values.hasValue(this.data[currentSelect][i]['value'])))
+					if ((!this.values && this.data[currentSelect][i]['default'] == 'true') || (this.values && this.values.hasValue(this.data[currentSelect][i]['value'].toString())))
 					{
 						option.selected = true;
 					}
