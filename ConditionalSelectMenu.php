@@ -68,7 +68,7 @@ class ConditionalSelectMenu extends SelectMenu
 		{
 			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
 		}
-
+		
 		foreach ($this->arrOptions as $strKey=>$arrOption)
 		{
 			if (array_key_exists('value', $arrOption))
@@ -100,16 +100,13 @@ class ConditionalSelectMenu extends SelectMenu
 			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
 		}
 		
-		$strOptionsJS = "
-<script type=\"text/javascript\">
-<!--//--><![CDATA[//><!--
-window.addEvent('domready', function()
+		$strOptionsJS = (version_compare(VERSION, '2.9', '>') ? '<script>' : '<script type="text/javascript">
+<!--//--><![CDATA[//><!--')."window.addEvent('domready', function()
 {
 	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "'), JSON.decode('" . str_replace("'", "\'", json_encode($this->varValue)) . "')" . $strClassOptions . ");
 });
-//--><!]]>
-</script>
-";
+".(version_compare(VERSION, '2.9', '>') ? '</script>' : '//--><!]]>
+</script>')."";
 		
 		return sprintf('<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
 						$this->strName,
