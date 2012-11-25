@@ -29,10 +29,10 @@ var ConditionalSelect = new Class(
 		this.values = new Hash(values);
 
 		// Register event
-		this.parent.addEvent('change', function(event) { this.update(event.target) }.bind(this));
+		this.parent.addEvent('change', function() { this.update(this.parent) }.bind(this));
 
 		// Register pseudo-event for ajax update
-		window.addEvent('ajaxready', function(event) { this.update(event.target) }.bind(this));
+		window.addEvent('ajaxready', function() { this.update(this.parent) }.bind(this));
 
 		// Adjust current options
 		this.update();
