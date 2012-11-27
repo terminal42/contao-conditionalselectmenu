@@ -1,28 +1,29 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
- * TYPOlight Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * Contao Open Source CMS
+ * Copyright (C) 2005-2012 Leo Feyer
+ *
+ * Formerly known as TYPOlight Open Source CMS.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, please visit the Free
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Andreas Schempp 2008-2010
- * @author     Andreas Schempp <andreas@schempp.ch>
+ * @copyright  terminal42 gmbh 2008-2012
+ * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html
- * @version    $Id$
  */
 
 
@@ -51,13 +52,13 @@ class ConditionalSelectMenu extends SelectMenu
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
 		}
-		
+
 		// Make sure values is an array
 		if (!is_array($this->varValue))
 		{
 			$this->varValue = array($this->varValue);
 		}
-		
+
 		// Get labels from parent select menu
 		$arrParentOptions = array();
 		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
@@ -84,7 +85,7 @@ class ConditionalSelectMenu extends SelectMenu
 			$arrOptgroups = array();
 
 			foreach ($arrOption as $arrOptgroup)
-			{			
+			{
 				$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
 										   specialchars($arrOptgroup['value']),
 										   (in_array($arrOptgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
@@ -93,13 +94,13 @@ class ConditionalSelectMenu extends SelectMenu
 
 			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars(strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey), implode('', $arrOptgroups));
 		}
-		
+
 		// Prepare Javascript
 		if ($this->includeBlankOption)
 		{
 			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
 		}
-		
+
 		$strOptionsJS = "
 <script type=\"text/javascript\">
 <!--//--><![CDATA[//><!--
@@ -110,7 +111,7 @@ window.addEvent('domready', function()
 //--><!]]>
 </script>
 ";
-		
+
 		return sprintf('<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
 						$this->strName,
 						$this->strId,
