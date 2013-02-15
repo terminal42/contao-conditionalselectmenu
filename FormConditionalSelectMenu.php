@@ -93,7 +93,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 		}
 
 		// Add empty option (XHTML) if there are none
-		if (!count($this->arrOptions))
+		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
 		}
@@ -148,12 +148,10 @@ class FormConditionalSelectMenu extends FormSelectMenu
 
 		$strOptionsJS = "
 <script type=\"text/javascript\">
-<!--//--><![CDATA[//><!--
 window.addEvent('domready', function()
 {
 	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "'), JSON.decode('" . str_replace("'", "\'", json_encode($this->varValue)) . "')" . $strClassOptions . ");
 });
-//--><!]]>
 </script>
 ";
 

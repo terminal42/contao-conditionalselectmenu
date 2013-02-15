@@ -60,14 +60,12 @@ var ConditionalSelect = new Class(
 		}
 
 		// Find current selections
-		var count=0;
-		var currentSelection = new Array();
+		var currentSelection = [];
 		for( i=0; i<this.parent.options.length; i++ )
 		{
 			if (this.parent.options[i].selected)
 			{
-				currentSelection[count] = this.parent.options[i].value;
-				count++;
+				currentSelection.push(this.parent.options[i].value);
 			}
 		}
 
