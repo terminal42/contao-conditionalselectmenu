@@ -118,5 +118,34 @@ window.addEvent('domready', function()
 						$this->getAttributes(),
 						$strOptions) . $strOptionsJS . $this->addSubmit();
 	}
+
+
+	public static function prepareOptions($arrGroups)
+	{
+    	$arrNewOptions = array();
+
+    	foreach ($arrGroups as $group => $arrOptions)
+    	{
+        	foreach ($arrOptions as $k => $option)
+        	{
+            	if (is_array($option) && is_array($option['label']))
+            	{
+                	foreach ($option['label'] as $optionGroup => $arrLabels)
+                	{
+                    	foreach ($arrLabels as $kk => $label)
+                    	{
+                        	$arrNewOptions[$group][$optionGroup][] = array('value'=>$kk, 'label'=>$label);
+                        }
+                	}
+
+                	continue;
+            	}
+
+            	$arrNewOptions[$group][$k] = $option;
+        	}
+    	}
+
+    	return $arrNewOptions;
+	}
 }
 
