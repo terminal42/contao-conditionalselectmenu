@@ -46,7 +46,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 				{
 					$arrValue = array();
 					$arrOptions = array();
-					foreach( $this->arrOptions as $arrOption )
+					foreach ($this->arrOptions as $arrOption)
 					{
 						if ($arrOption['group'])
 						{
@@ -81,6 +81,8 @@ class FormConditionalSelectMenu extends FormSelectMenu
 	 */
 	public function generate()
 	{
+    	$this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
+
 		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect.js';
 
 		$strOptions = '';
@@ -127,20 +129,44 @@ class FormConditionalSelectMenu extends FormSelectMenu
 				continue;
 			}
 
+			$strGroup = strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey;
 			$arrOptgroups = array();
 
-			foreach ($arrOption as $arrOptgroup)
+			foreach ($arrOption as $kk => $arrOptgroup)
 			{
-				$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
-										   specialchars($arrOptgroup['value']),
-										   (in_array($arrOptgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
-										   $arrOptgroup['label']);
+    			if (array_key_exists('value', $arrOptgroup))
+    			{
+    				$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
+    										   specialchars($arrOptgroup['value']),
+    										   (in_array($arrOptgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
+    										   $arrOptgroup['label']);
+
+    				continue;
+    			}
+
+    			$arrSubgroups = array();
+
+    			foreach ($arrOptgroup as $arrSubgroup)
+    			{
+        			$arrSubgroups[] = sprintf('<option value="%s"%s>%s</option>',
+    										   specialchars($arrSubgroup['value']),
+    										   (in_array($arrSubgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
+    										   $arrSubgroup['label']);
+    			}
+
+    			if (!empty($arrSubgroups))
+    			{
+        			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strGroup . ' – ' . $kk), implode('', $arrSubgroups));
+        		}
 			}
 
-			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars(strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey), implode('', $arrOptgroups));
+			if (!empty($arrOptgroups))
+			{
+    			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strGroup), implode('', $arrOptgroups));
+    		}
 		}
 
-// Prepare Javascript
+		// Prepare Javascript
 		if ($this->includeBlankOption)
 		{
 			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
