@@ -38,7 +38,7 @@ class ConditionalSelectMenu extends SelectMenu
 	{
 	    $this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
 
-		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect.js';
+		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
 
 		$strOptions = '';
 		$strClass = 'tl_select';
