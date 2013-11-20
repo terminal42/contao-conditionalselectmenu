@@ -9,7 +9,7 @@
  */
 var ConditionalSelect = new Class(
 {
-	Binds: ['update'],
+	Binds: ['update', 'generateOptions'],
 	Implements: Options,
 	options: {
 		includeBlankOption: false,
@@ -60,14 +60,12 @@ var ConditionalSelect = new Class(
 		}
 
 		// Find current selections
-		var count=0;
-		var currentSelection = new Array();
+		var currentSelection = [];
 		for( i=0; i<this.parent.options.length; i++ )
 		{
 			if (this.parent.options[i].selected)
 			{
-				currentSelection[count] = this.parent.options[i].value;
-				count++;
+				currentSelection.push(this.parent.options[i].value);
 			}
 		}
 
@@ -88,21 +86,27 @@ var ConditionalSelect = new Class(
 					});
 				}
 
-				for(i=0; i<this.data[currentSelect].length; i++)
+				// Object of arrays/options
+				if (Object.prototype.toString.call(this.data[currentSelect]) !== '[object Array]')
 				{
-					var option = new Element('option', {
-						value: this.data[currentSelect][i]['value']
-					});
+				    var groupPrefix = optGroup ? (parentNode.label + ' – ') : '';
+				    optGroup = false;
 
-					option.set('html', this.data[currentSelect][i]['label']);
+    				for (k in this.data[currentSelect])
+    				{
+        				parentNode = new Element('optgroup', {
+    						label: (groupPrefix + k)
+    					});
 
-					if ((!this.values && this.data[currentSelect][i]['default'] == 'true') || (this.values && this.values.hasValue(this.data[currentSelect][i]['value'].toString())))
-					{
-						option.selected = true;
-					}
+        				parentNode = this.generateOptions(this.data[currentSelect][k], parentNode);
 
-					parentNode.appendChild(option);
+        				this.element.appendChild(parentNode);
+    				}
 				}
+				else
+				{
+    				parentNode = this.generateOptions(this.data[currentSelect], parentNode);
+    			}
 
 				if (optGroup)
 				{
@@ -117,5 +121,26 @@ var ConditionalSelect = new Class(
 		}
 
 		this.element.fireEvent('change', [this.element, this.parent, this.data]);
+	},
+
+	generateOptions: function(data, parentNode)
+	{
+    	for (i=0; i<data.length; i++)
+		{
+			var option = new Element('option', {
+				value: data[i]['value']
+			});
+
+			option.set('html', data[i]['label']);
+
+			if ((!this.values && data[i]['default'] == 'true') || (this.values && this.values.hasValue(data[i]['value'].toString())))
+			{
+				option.selected = true;
+			}
+
+			parentNode.appendChild(option);
+		}
+
+		return parentNode;
 	}
 });
