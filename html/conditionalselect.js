@@ -133,7 +133,7 @@ var ConditionalSelect = new Class(
 
 			option.set('html', data[i]['label']);
 
-			if ((!this.values && data[i]['default'] == 'true') || (this.values && this.values.hasValue(data[i]['value'].toString())))
+			if ((!this.values && data[i]['default'] == 'true') || (this.values && data[i]['value'] && this.values.hasValue(data[i]['value'].toString())))
 			{
 				option.selected = true;
 			}
