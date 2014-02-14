@@ -39,13 +39,29 @@ class FormConditionalSelectMenu extends FormSelectMenu
 	{
 		switch ($strKey)
 		{
+		    // convert array from optionwizard to treedimensional array
 			case 'options':
 				$this->arrOptions = deserialize($varValue);
-				// convert array from optionwizard to treedimensional array
+
+				// If value of first option is empty, we assume it's the blank option
+				if ($this->arrOptions[0]['value'] == '') {
+				    if (!$this->includeBlankOption) {
+    				    $this->includeBlankOption = true;
+
+    				    if ($this->blankOptionLabel == '') {
+        				    $this->blankOptionLabel = $this->arrOptions[0]['label'];
+    				    }
+				    }
+
+    				array_shift($this->arrOptions);
+				}
+
 				if ($this->arrOptions[0]['group'])
 				{
 					$arrValue = array();
 					$arrOptions = array();
+					$strOptionKey = '';
+
 					foreach ($this->arrOptions as $arrOption)
 					{
 						if ($arrOption['group'])
