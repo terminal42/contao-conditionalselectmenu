@@ -1,146 +1,152 @@
 /**
- * Class ConditionalSelect
+ * conditionalselectmenu Extension for Contao Open Source CMS
  *
- * Provide methods to handle conditional select
- *
- * @copyright  terminal42 gmbh 2008-2010
- * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
+ * @link       http://github.com/terminal42/contao-conditionalselectmenu
  */
-var ConditionalSelect = new Class(
-{
-	Binds: ['update', 'generateOptions'],
-	Implements: Options,
-	options: {
-		includeBlankOption: false,
-		blankOptionLabel: '-'
-	},
 
-	/**
-	 * Initialize dynamic menu
-	 */
-	initialize: function(element, parent, data, values, options)
-	{
-		this.setOptions(options);
+(function (window, document) {
+    "use strict";
 
-		this.element = $(element);
-		this.parent = $(parent);
-		this.data = data;
-		this.values = new Hash(values);
+    window.ConditionalSelect = function (element, parent, data, values, options) {
 
-		// Register event
-		this.parent.addEvent('change', function() { this.update(this.parent) }.bind(this));
+        function generateOptions(data, parentNode) {
+            var option, i;
 
-		// Register pseudo-event for ajax update
-		window.addEvent('ajaxready', function() { this.update(this.parent) }.bind(this));
+            for (i = 0; i < data.length; i += 1) {
+                option = document.createElement('option');
+                option.value = data[i].value;
+                option.innerHTML = data[i].label;
 
-		// Adjust current options
-		this.update();
-	},
+                if ((!Array.isArray(values) && data[i]['default'] === 'true') || (Array.isArray(values) && data[i].value && values.indexOf(String(data[i].value)) !== -1)) {
+                    option.selected = true;
+                }
 
-	update: function(parent)
-	{
-		if (parent)
-		{
-			this.parent = $(parent);
-		}
+                parentNode.appendChild(option);
+            }
 
-		// Remove current options (nothing will happen if javascript is disabled)
-		this.element.set('html', '');
+            return parentNode;
+        }
 
-		if (this.options.includeBlankOption)
-		{
-			var option = new Element('option', {
-				value: ''
-			});
+        function update() {
+            var option, i, s, k, parentNode, optGroup, currentSelect, groupPrefix,
+                currentSelection = [],
+                currentSelectionLabels = [];
 
-			option.set('html', this.options.blankOptionLabel);
+            // Remove current options (nothing will happen if javascript is disabled)
+            element.innerHTML = '';
 
-			this.element.appendChild(option);
-		}
+            // Find current selections in parent (could be multi-selection)
+            for (i = 0; i < parent.options.length; i += 1) {
+                if (parent.options[i].selected) {
+                    currentSelection.push(parent.options[i].value);
+                    currentSelectionLabels.push(parent.options[i].innerHTML);
+                }
+            }
 
-		// Find current selections
-		var currentSelection = [];
-		for( i=0; i<this.parent.options.length; i++ )
-		{
-			if (this.parent.options[i].selected)
-			{
-				currentSelection.push(this.parent.options[i].value);
-			}
-		}
+            // Add options for all options selected in the parent (could be multi-selection)
+            for (s = 0; s < currentSelection.length; s += 1) {
+                currentSelect = currentSelection[s];
 
-		// Add the correct options
-		for( s=0; s<currentSelection.length; s++ )
-		{
-			currentSelect = currentSelection[s];
-			if (this.data[currentSelect])
-			{
-				var parentNode = this.element;
-				var optGroup = false;
+                if (data[currentSelect]) {
+                    parentNode = element;
+                    optGroup = false;
 
-				if (currentSelection.length > 1)
-				{
-					optGroup = true;
-					parentNode = new Element('optgroup', {
-						label: (this.parent.getFirst(('[value='+currentSelect+']')).get('text') ? this.parent.getFirst(('[value='+currentSelect+']')).get('text') : currentSelect)
-					});
-				}
+                    if (currentSelection.length > 1) {
+                        optGroup = true;
+                        parentNode = document.createElement('optgroup');
+                        parentNode.label = currentSelectionLabels[currentSelect] || currentSelect;
+                    }
 
-				// Object of arrays/options
-				if (Object.prototype.toString.call(this.data[currentSelect]) !== '[object Array]')
-				{
-				    var groupPrefix = optGroup ? (parentNode.label + ' – ') : '';
-				    optGroup = false;
+                    // Object of arrays/options
+                    if (Array.isArray(data[currentSelect])) {
+                        groupPrefix = optGroup ? (parentNode.label + ' - ') : '';
+                        optGroup = false;
 
-    				for (k in this.data[currentSelect])
-    				{
-        				parentNode = new Element('optgroup', {
-    						label: (groupPrefix + k)
-    					});
+                        for (k in data[currentSelect]) {
+                            parentNode = document.createElement('optgroup');
+                            parentNode.label = groupPrefix + k;
+                            parentNode = generateOptions(data[currentSelect][k], parentNode);
 
-        				parentNode = this.generateOptions(this.data[currentSelect][k], parentNode);
+                            element.appendChild(parentNode);
+                        }
+                    } else {
+                        parentNode = generateOptions(data[currentSelect], parentNode);
+                    }
 
-        				this.element.appendChild(parentNode);
-    				}
-				}
-				else
-				{
-    				parentNode = this.generateOptions(this.data[currentSelect], parentNode);
-    			}
+                    if (optGroup) {
+                        element.appendChild(parentNode);
+                    }
+                }
+            }
 
-				if (optGroup)
-				{
-					this.element.appendChild(parentNode);
-				}
-			}
-		}
+            if (options.includeBlankOption || element.options.length === 0) {
+                option = document.createElement('option');
+                option.value = '';
+                option.innerHTML = options.blankOptionLabel;
 
-		if (this.element.options.length == 0)
-		{
-			this.element.options[0] = new Option('-', '');
-		}
+                if (element.options.length === 0) {
+                    element.appendChild(option);
+                } else {
+                    element.insertBefore(element.options[0], option);
+                }
+            }
 
-		this.element.fireEvent('change', [this.element, this.parent, this.data]);
-	},
+    // @todo implement event
+    //        element.fireEvent('change', [this.element, this.parent, this.data]);
+        }
 
-	generateOptions: function(data, parentNode)
-	{
-    	for (i=0; i<data.length; i++)
-		{
-			var option = new Element('option', {
-				value: data[i]['value']
-			});
+        options = options || {};
+        if (!options.hasOwnProperty('blankOptionLabel')) {
+            options.blankOptionLabel = '-';
+        }
 
-			option.set('html', data[i]['label']);
+        if (window.addEventListener) {
+            parent.addEventListener('change', update, false);
+            window.addEventListener('ajaxready', update, false);
+        } else if (window.attachEvent) {
+            parent.attachEvent('change', update);
+            window.attachEvent('ajaxready', update);
+        }
+    };
 
-			if ((!this.values && data[i]['default'] == 'true') || (this.values && data[i]['value'] && this.values.hasValue(data[i]['value'].toString())))
-			{
-				option.selected = true;
-			}
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (searchElement, fromIndex) {
+            if (this === undefined || this === null) {
+                throw new TypeError('"this" is null or not defined');
+            }
 
-			parentNode.appendChild(option);
-		}
+            var length = this.length >>> 0; // Hack to convert object.length to a UInt32
 
-		return parentNode;
-	}
-});
+            fromIndex = +fromIndex || 0;
+
+            if (Math.abs(fromIndex) === Infinity) {
+                fromIndex = 0;
+            }
+
+            if (fromIndex < 0) {
+                fromIndex += length;
+                if (fromIndex < 0) {
+                    fromIndex = 0;
+                }
+            }
+
+            for (; fromIndex < length; fromIndex += 1) {
+                if (this[fromIndex] === searchElement) {
+                    return fromIndex;
+                }
+            }
+
+            return -1;
+        };
+    }
+
+    if (!Array.isArray) {
+        Array.isArray = function (vArg) {
+            return Object.prototype.toString.call(vArg) === "[object Array]";
+        };
+    }
+
+}(this, this.document));
