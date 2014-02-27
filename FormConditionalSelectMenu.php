@@ -174,9 +174,8 @@ class FormConditionalSelectMenu extends FormSelectMenu
 
 		$strOptionsJS = "
 <script>
-window.addEvent('domready', function()
-{
-	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "'), JSON.decode('" . str_replace("'", "\'", json_encode($this->varValue)) . "')" . $strClassOptions . ");
+window.addEvent('domready', function() {
+	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', " . json_encode($this->arrOptions) . ", " . json_encode($this->varValue) . $strClassOptions . ");
 });
 </script>
 ";
