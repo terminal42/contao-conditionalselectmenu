@@ -90,7 +90,7 @@
                 if (element.options.length === 0) {
                     element.appendChild(option);
                 } else {
-                    element.insertBefore(element.options[0], option);
+                    element.insertBefore(option, element.options[0]);
                 }
             }
 
