@@ -124,7 +124,7 @@ class ConditionalSelectMenu extends SelectMenu
 		// Prepare Javascript
 		if ($this->includeBlankOption)
 		{
-			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '-') . "}";
+			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
 		}
 
 		$strOptionsJS = "
