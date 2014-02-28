@@ -110,6 +110,8 @@
             parent.attachEvent('change', update);
             window.attachEvent('ajaxready', update);
         }
+
+        update();
     };
 
     if (!Array.prototype.indexOf) {
