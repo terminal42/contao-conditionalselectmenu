@@ -31,7 +31,7 @@
         }
 
         function update() {
-            var option, i, s, k, parentNode, optGroup, currentSelect, groupPrefix,
+            var option, i, s, k, parentNode, optGroup, currentSelect, groupPrefix, event,
                 currentSelection = [],
                 currentSelectionLabels = [];
 
@@ -94,8 +94,21 @@
                 }
             }
 
-    // @todo implement event
-    //        element.fireEvent('change', [this.element, this.parent, this.data]);
+            if (document.createEvent) {
+                event = document.createEvent("HTMLEvents");
+                event.initEvent('change', true, true);
+            } else {
+                event = document.createEventObject();
+                event.eventType = 'change';
+            }
+
+            event.eventName = 'change';
+
+            if (document.createEvent) {
+                element.dispatchEvent(event);
+            } else {
+                element.fireEvent("on" + event.eventType, event);
+            }
         }
 
         options = options || {};
