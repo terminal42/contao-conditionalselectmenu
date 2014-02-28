@@ -61,7 +61,7 @@
                     }
 
                     // Object of arrays/options
-                    if (Array.isArray(data[currentSelect])) {
+                    if (!Array.isArray(data[currentSelect])) {
                         groupPrefix = optGroup ? (parentNode.label + ' - ') : '';
                         optGroup = false;
 
