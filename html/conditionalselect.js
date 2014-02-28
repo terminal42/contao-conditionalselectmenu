@@ -31,7 +31,7 @@
         }
 
         function update() {
-            var option, i, s, k, parentNode, optGroup, currentSelect, groupPrefix, event,
+            var option, i, s, k, parentNode, optGroup, currentSelect, groupPrefix, event, cssClasses,
                 currentSelection = [],
                 currentSelectionLabels = [];
 
@@ -80,6 +80,16 @@
                         element.appendChild(parentNode);
                     }
                 }
+            }
+
+            // Add/remove CSS class
+            cssClasses = (element.className || "").split(' ');
+            if (element.options.length === 0 && cssClasses.indexOf('empty') === -1) {
+                cssClasses.push('empty');
+                element.className = cssClasses.join(' ');
+            } else if (element.options.length > 0 && cssClasses.indexOf('empty') !== -1) {
+                cssClasses.splice(cssClasses.indexOf('empty'), 1);
+                element.className = cssClasses.join(' ');
             }
 
             if (options.includeBlankOption || element.options.length === 0) {
