@@ -38,33 +38,32 @@ $GLOBALS['TL_DCA']['tl_form_field']['palettes']['conditionalselect'] = '{type_le
  */
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['conditionField'] = array
 (
-	'label'					=> &$GLOBALS['TL_LANG']['tl_form_field']['conditionField'],
-	'inputType'				=> 'select',
-	'options_callback'		=> array('tl_form_field_conditionalselect', 'getConditionFields'),
-	'eval'					=> array('includeBlankOption'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
+    'label'             => &$GLOBALS['TL_LANG']['tl_form_field']['conditionField'],
+    'inputType'         => 'select',
+    'options_callback'  => array('tl_form_field_conditionalselect', 'getConditionFields'),
+    'eval'              => array('includeBlankOption'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
 );
 
 
 class tl_form_field_conditionalselect extends Backend
 {
 
-	/**
-	 * Returns an array of select-fields in the same form
-	 */
-	public function getConditionFields($dc)
-	{
-		$arrReturn = array();
+    /**
+     * Returns an array of select-fields in the same form
+     */
+    public function getConditionFields($dc)
+    {
+        $arrReturn = array();
 
-		$arrFields = $this->Database->prepare("SELECT * FROM tl_form_field WHERE pid=? AND id!=? AND (type=? OR type=?)")
-									->execute($this->Session->get('CURRENT_ID'), $dc->id, 'select', 'conditionalselect')
-									->fetchAllAssoc();
+        $arrFields = $this->Database->prepare("SELECT * FROM tl_form_field WHERE pid=? AND id!=? AND (type=? OR type=?)")
+                                    ->execute($this->Session->get('CURRENT_ID'), $dc->id, 'select', 'conditionalselect')
+                                    ->fetchAllAssoc();
 
-		foreach( $arrFields as $arrField )
-		{
-			$arrReturn[$arrField['id']] = $arrField['name'];
-		}
+        foreach ($arrFields as $arrField) {
+            $arrReturn[$arrField['id']] = $arrField['name'];
+        }
 
-		return $arrReturn;
-	}
+        return $arrReturn;
+    }
 }
 
