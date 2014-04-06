@@ -100,7 +100,7 @@
                 if (element.options.length === 0) {
                     element.appendChild(option);
                 } else {
-                    element.insertBefore(option, element.options[0]);
+                    element.insertBefore(option, element.options[0]).selected = true;
                 }
             }
 
