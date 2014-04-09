@@ -100,7 +100,8 @@
                 if (element.options.length === 0) {
                     element.appendChild(option);
                 } else {
-                    element.insertBefore(option, element.options[0]).selected = true;
+                    element.insertBefore(option, element.options[0]);
+                    element.options[0].selected = true;
                 }
             }
 
@@ -130,8 +131,8 @@
             parent.addEventListener('change', update, false);
             window.addEventListener('ajaxready', update, false);
         } else if (window.attachEvent) {
-            parent.attachEvent('change', update);
-            window.attachEvent('ajaxready', update);
+            parent.attachEvent('onchange', update);
+            window.attachEvent('onajaxready', update);
         }
 
         update();
