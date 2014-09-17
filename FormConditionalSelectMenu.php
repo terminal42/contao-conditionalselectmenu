@@ -99,7 +99,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 	{
     	$this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
 
-		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
+		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/assets/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
 
 		$strOptions = '';
 		$strClass = 'select';
