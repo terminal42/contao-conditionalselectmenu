@@ -194,7 +194,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
 		}
 
-		$strOptionsJS = "
+		$GLOBALS['TL_BODY'][] = "
 <script>
 new ConditionalSelect(document.getElementById('ctrl_" . $this->strId . "'), document.getElementById('ctrl_" . $this->conditionField . "'), " . json_encode($this->arrOptions) . ", " . json_encode($this->varValue) . $strClassOptions . ");
 </script>
@@ -206,7 +206,7 @@ new ConditionalSelect(document.getElementById('ctrl_" . $this->strId . "'), docu
 						$strClass,
 						(strlen($this->strClass) ? ' ' . $this->strClass : ''),
 						$this->getAttributes(),
-						$strOptions) . $strOptionsJS . $this->addSubmit();
+						$strOptions) . $this->addSubmit();
 	}
 }
 
