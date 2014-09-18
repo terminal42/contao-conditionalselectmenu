@@ -35,3 +35,11 @@ ClassLoader::addClasses(array
 	'ConditionalSelectMenu'         => 'system/modules/conditionalselectmenu/ConditionalSelectMenu.php',
 	'FormConditionalSelectMenu'     => 'system/modules/conditionalselectmenu/FormConditionalSelectMenu.php',
 ));
+
+/**
+ * Register the templates
+ */
+TemplateLoader::addFiles(array
+(
+    'form_conditionalselect'=> 'system/modules/conditionalselectmenu/templates/forms'
+));

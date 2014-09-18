@@ -29,6 +29,12 @@
 
 class FormConditionalSelectMenu extends FormSelectMenu
 {
+	/**
+	 * Template
+	 *
+	 * @var string
+	 */
+	protected $strTemplate = 'form_conditionalselect';
 
 	/**
 	 * Add specific attributes
