@@ -29,172 +29,172 @@
 
 class FormConditionalSelectMenu extends FormSelectMenu
 {
-	/**
-	 * Template
-	 *
-	 * @var string
-	 */
-	protected $strTemplate = 'form_conditionalselect';
+    /**
+     * Template
+     *
+     * @var string
+     */
+    protected $strTemplate = 'form_conditionalselect';
 
-	/**
-	 * Add specific attributes
-	 * @param string
-	 * @param mixed
-	 */
-	public function __set($strKey, $varValue)
-	{
-		switch ($strKey)
-		{
-		    // convert array from optionwizard to treedimensional array
-			case 'options':
-				$this->arrOptions = deserialize($varValue);
+    /**
+     * Add specific attributes
+     * @param string
+     * @param mixed
+     */
+    public function __set($strKey, $varValue)
+    {
+        switch ($strKey)
+        {
+            // convert array from optionwizard to treedimensional array
+            case 'options':
+                $this->arrOptions = deserialize($varValue);
 
-				// If value of first option is empty, we assume it's the blank option
-				if ($this->arrOptions[0]['value'] == '') {
-				    if (!$this->includeBlankOption) {
-    				    $this->includeBlankOption = true;
+                // If value of first option is empty, we assume it's the blank option
+                if ($this->arrOptions[0]['value'] == '') {
+                    if (!$this->includeBlankOption) {
+                        $this->includeBlankOption = true;
 
-    				    if ($this->blankOptionLabel == '') {
-        				    $this->blankOptionLabel = $this->arrOptions[0]['label'];
-    				    }
-				    }
+                        if ($this->blankOptionLabel == '') {
+                            $this->blankOptionLabel = $this->arrOptions[0]['label'];
+                        }
+                    }
 
-    				array_shift($this->arrOptions);
-				}
+                    array_shift($this->arrOptions);
+                }
 
-				if ($this->arrOptions[0]['group'])
-				{
-					$arrValue = array();
-					$arrOptions = array();
-					$strOptionKey = '';
+                if ($this->arrOptions[0]['group'])
+                {
+                    $arrValue = array();
+                    $arrOptions = array();
+                    $strOptionKey = '';
 
-					foreach ($this->arrOptions as $arrOption)
-					{
-						if ($arrOption['group'])
-						{
-							$strOptionKey = $arrOption['value'];
-						}
-						else
-						{
-							$arrOptions[$strOptionKey][] = $arrOption;
-						}
+                    foreach ($this->arrOptions as $arrOption)
+                    {
+                        if ($arrOption['group'])
+                        {
+                            $strOptionKey = $arrOption['value'];
+                        }
+                        else
+                        {
+                            $arrOptions[$strOptionKey][] = $arrOption;
+                        }
 
-						if ($arrOption['default'])
-						{
-							$arrValue[] = $arrOption['value'];
-						}
-					}
+                        if ($arrOption['default'])
+                        {
+                            $arrValue[] = $arrOption['value'];
+                        }
+                    }
 
-					$this->varValue = $arrValue;
-					$this->arrOptions = $arrOptions;
-				}
-				break;
+                    $this->varValue = $arrValue;
+                    $this->arrOptions = $arrOptions;
+                }
+                break;
 
-			default:
-				parent::__set($strKey, $varValue);
-				break;
-		}
-	}
+            default:
+                parent::__set($strKey, $varValue);
+                break;
+        }
+    }
 
 
-	/**
-	 * Generate the widget and return it as string
-	 * @return string
-	 */
-	public function generate()
-	{
-    	$this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
+    /**
+     * Generate the widget and return it as string
+     * @return string
+     */
+    public function generate()
+    {
+        $this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
 
-		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/assets/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
+        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/assets/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
 
-		$strOptions = '';
-		$strClass = 'select';
+        $strOptions = '';
+        $strClass = 'select';
 
-		if ($this->multiple)
-		{
-			$this->strName .= '[]';
-			$strClass = 'multiselect';
-		}
+        if ($this->multiple)
+        {
+            $this->strName .= '[]';
+            $strClass = 'multiselect';
+        }
 
-		// Add empty option (XHTML) if there are none
-		if (empty($this->arrOptions))
-		{
-			$this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
-		}
+        // Add empty option (XHTML) if there are none
+        if (empty($this->arrOptions))
+        {
+            $this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
+        }
 
-		// Make sure values is an array
-		if (!is_array($this->varValue))
-		{
-			$this->varValue = array($this->varValue);
-		}
+        // Make sure values is an array
+        if (!is_array($this->varValue))
+        {
+            $this->varValue = array($this->varValue);
+        }
 
-		// Get labels from parent select menu
-		$arrParentOptions = array();
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
-		{
-			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
-		}
-		elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options']))
-		{
-			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
-		}
+        // Get labels from parent select menu
+        $arrParentOptions = array();
+        if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
+        {
+            $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
+        }
+        elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options']))
+        {
+            $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
+        }
 
-		foreach ($this->arrOptions as $strKey=>$arrOption)
-		{
-			if (array_key_exists('value', $arrOption))
-			{
-				$strOptions .= sprintf('<option value="%s"%s>%s</option>',
-										 specialchars($arrOption['value']),
-										 (in_array($arrOption['value'] , $this->varValue) ? ' selected="selected"' : ''),
-										 $arrOption['label']);
+        foreach ($this->arrOptions as $strKey=>$arrOption)
+        {
+            if (array_key_exists('value', $arrOption))
+            {
+                $strOptions .= sprintf('<option value="%s"%s>%s</option>',
+                                         specialchars($arrOption['value']),
+                                         (in_array($arrOption['value'] , $this->varValue) ? ' selected="selected"' : ''),
+                                         $arrOption['label']);
 
-				continue;
-			}
+                continue;
+            }
 
-			$strGroup = strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey;
-			$arrOptgroups = array();
+            $strGroup = strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey;
+            $arrOptgroups = array();
 
-			foreach ($arrOption as $kk => $arrOptgroup)
-			{
-    			if (array_key_exists('value', $arrOptgroup))
-    			{
-    				$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
-    										   specialchars($arrOptgroup['value']),
-    										   (in_array($arrOptgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
-    										   $arrOptgroup['label']);
+            foreach ($arrOption as $kk => $arrOptgroup)
+            {
+                if (array_key_exists('value', $arrOptgroup))
+                {
+                    $arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
+                                               specialchars($arrOptgroup['value']),
+                                               (in_array($arrOptgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
+                                               $arrOptgroup['label']);
 
-    				continue;
-    			}
+                    continue;
+                }
 
-    			$arrSubgroups = array();
+                $arrSubgroups = array();
 
-    			foreach ($arrOptgroup as $arrSubgroup)
-    			{
-        			$arrSubgroups[] = sprintf('<option value="%s"%s>%s</option>',
-    										   specialchars($arrSubgroup['value']),
-    										   (in_array($arrSubgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
-    										   $arrSubgroup['label']);
-    			}
+                foreach ($arrOptgroup as $arrSubgroup)
+                {
+                    $arrSubgroups[] = sprintf('<option value="%s"%s>%s</option>',
+                                               specialchars($arrSubgroup['value']),
+                                               (in_array($arrSubgroup['value'] , $this->varValue) ? ' selected="selected"' : ''),
+                                               $arrSubgroup['label']);
+                }
 
-    			if (!empty($arrSubgroups))
-    			{
-        			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strGroup . ' – ' . $kk), implode('', $arrSubgroups));
-        		}
-			}
+                if (!empty($arrSubgroups))
+                {
+                    $strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strGroup . ' – ' . $kk), implode('', $arrSubgroups));
+                }
+            }
 
-			if (!empty($arrOptgroups))
-			{
-    			$strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strGroup), implode('', $arrOptgroups));
-    		}
-		}
+            if (!empty($arrOptgroups))
+            {
+                $strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', specialchars($strGroup), implode('', $arrOptgroups));
+            }
+        }
 
-		// Prepare Javascript
-		if ($this->includeBlankOption)
-		{
-			$strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
-		}
+        // Prepare Javascript
+        if ($this->includeBlankOption)
+        {
+            $strClassOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
+        }
 
-		$GLOBALS['TL_BODY'][] = "
+        $GLOBALS['TL_BODY'][] = "
 <script>
 window.addEvent('domready', function() {
   new ConditionalSelect(document.getElementById('ctrl_" . $this->strId . "'), document.getElementById('ctrl_" . $this->conditionField . "'), " . json_encode($this->arrOptions) . ", " . json_encode($this->varValue) . $strClassOptions . ");
@@ -202,13 +202,13 @@ window.addEvent('domready', function() {
 </script>
 ";
 
-		return sprintf('<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
-						$this->strName,
-						$this->strId,
-						$strClass,
-						(strlen($this->strClass) ? ' ' . $this->strClass : ''),
-						$this->getAttributes(),
-						$strOptions) . $this->addSubmit();
-	}
+        return sprintf('<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
+                        $this->strName,
+                        $this->strId,
+                        $strClass,
+                        (strlen($this->strClass) ? ' ' . $this->strClass : ''),
+                        $this->getAttributes(),
+                        $strOptions) . $this->addSubmit();
+    }
 }
 
