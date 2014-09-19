@@ -96,6 +96,162 @@ class FormConditionalSelectMenu extends FormSelectMenu
         }
     }
 
+    /**
+	 * Parse the template file and return it as string
+	 *
+	 * @param array $arrAttributes An optional attributes array
+	 *
+	 * @return string The template markup
+	 */
+	public function parse($arrAttributes=null)
+	{
+        $this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
+
+        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/assets/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
+
+        $strOptions = '';
+        $strClass = 'select';
+
+        if ($this->multiple)
+        {
+            $this->strName .= '[]';
+            $strClass = 'multiselect';
+        }
+
+        // Add empty option (XHTML) if there are none
+        if (empty($this->arrOptions))
+        {
+            $this->arrOptions = array(array('value'=>'', 'label'=>(strlen($this->blankOptionLabel) ? $this->blankOptionLabel : '-')));
+        }
+
+		// Custom class
+		if ($this->strClass != '')
+		{
+			$strClass .= ' ' . $this->strClass;
+		}
+
+		$this->strClass = $strClass;
+
+        // Prepare Javascript
+        if ($this->includeBlankOption)
+        {
+            $this->classOptions = ", {includeBlankOption: true" . (strlen($this->blankOptionLabel) ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '') . "}";
+        }
+
+		return parent::parse($arrAttributes);
+	}
+
+
+	/**
+	 * Generate the options
+	 *
+	 * @return array The options array
+	 */
+	protected function getOptions()
+	{
+        // Make sure values is an array
+        if (!is_array($this->varValue))
+        {
+            $this->varValue = array($this->varValue);
+        }
+
+        $arrParentOptions = array();
+
+        // Get labels from parent select menu
+        if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
+        {
+            $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
+        }
+        elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options']))
+        {
+            $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
+        }
+
+		$arrOptions = array();
+		$blnHasGroups = false;
+
+        foreach ($this->arrOptions as $strKey=>$arrOption)
+        {
+            if (array_key_exists('value', $arrOption))
+            {
+                $arrOptions[] = array
+                (
+                    'type' => 'option',
+                    'value' => specialchars($arrOption['value']),
+                    'label' => $arrOption['label'],
+                    'selected' => (in_array($arrOption['value'] , $this->varValue))
+                );
+
+                continue;
+            }
+
+            $strGroup = strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey;
+
+            if ($blnHasGroups) {
+                $arrOptions[] = array('type' => 'group_end');
+            }
+
+            $arrOptions[] = array
+            (
+                'type' => 'group_start',
+                'label' => specialchars($strGroup)
+            );
+
+            $blnHasGroups = true;
+            $blnHasSubgroups = false;
+            $arrOptgroups = array();
+
+            foreach ($arrOption as $kk => $arrOptgroup)
+            {
+                if (array_key_exists('value', $arrOptgroup))
+                {
+                    $arrOptions[] = array
+                    (
+                        'type' => 'option',
+                        'value' => specialchars($arrOptgroup['value']),
+                        'label' => $arrOptgroup['label'],
+                        'selected' => (in_array($arrOptgroup['value'] , $this->varValue))
+                    );
+
+                    continue;
+                }
+
+                if ($blnHasSubgroups) {
+                    $arrOptions[] = array('type' => 'group_end');
+                }
+
+                $arrOptions[] = array
+                (
+                    'type' => 'group_start',
+                    'label' => '&nbsp;' . specialchars($strGroup . ' – ' . $kk)
+                );
+
+                $blnHasSubgroups = true;
+                $arrSubgroups = array();
+
+                foreach ($arrOptgroup as $arrSubgroup)
+                {
+                    $arrOptions[] = array
+                    (
+                        'type' => 'option',
+                        'value' => specialchars($arrSubgroup['value']),
+                        'label' => $arrSubgroup['label'],
+                        'selected' => (in_array($arrSubgroup['value'] , $this->varValue))
+                    );
+                }
+            }
+
+            if ($blnHasSubgroups) {
+                $arrOptions[] = array('type' => 'group_end');
+            }
+        }
+
+        if ($blnHasGroups) {
+            $arrOptions[] = array('type' => 'group_end');
+        }
+
+		return $arrOptions;
+	}
 
     /**
      * Generate the widget and return it as string
