@@ -1,0 +1,28 @@
+{
+    "name":"terminal42/contao-conditionalselectmenu",
+    "description":"conditional select menu extension for Contao Open Source CMS",
+    "keywords":["form", "select", "conditional", "contao"],
+    "type":"contao-module",
+    "license":"LGPL-3.0+",
+    "authors":[
+        {
+            "name":"terminal42 gmbh",
+            "homepage":"http://terminal42.ch"
+        }
+    ],
+    "require":{
+        "php":">=5.3.2",
+        "contao/core":">=3.3",
+        "contao-community-alliance/composer-plugin":"*"
+    },
+    "replace": {
+        "contao-legacy/conditionalselectmenu": "self.version"
+    },
+    "extra":{
+        "contao": {
+            "sources":{
+                "": "system/modules/conditionalselectmenu"
+            }
+        }
+    }
+}
