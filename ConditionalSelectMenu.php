@@ -38,7 +38,7 @@ class ConditionalSelectMenu extends SelectMenu
 	{
 	    $this->arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
 
-		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/html/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
+		$GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'system/modules/conditionalselectmenu/assets/conditionalselect' . ($GLOBALS['TL_CONFIG']['debugMode'] ? '' : '.min') . '.js';
 
 		$strOptions = '';
 		$strClass = 'tl_select';
@@ -129,9 +129,8 @@ class ConditionalSelectMenu extends SelectMenu
 
 		$strOptionsJS = "
 <script>
-window.addEvent('domready', function()
-{
-	new ConditionalSelect('ctrl_" . $this->strId . "', 'ctrl_" . $this->conditionField . "', JSON.decode('" . str_replace("'", "\'", json_encode($this->arrOptions)) . "'), JSON.decode('" . str_replace("'", "\'", json_encode($this->varValue)) . "')" . $strClassOptions . ");
+window.addEvent('domready', function() {
+  new ConditionalSelect(document.getElementById('ctrl_" . $this->strId . "'), document.getElementById('ctrl_" . $this->conditionField . "'), " . json_encode($this->arrOptions) . ", " . json_encode($this->varValue) . $strClassOptions . ");
 });
 </script>
 ";

@@ -1,0 +1,35 @@
+<?php $this->extend('form_row'); ?>
+
+<?php $this->block('label'); ?>
+  <?php echo $this->generateLabel(); ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
+  <?php if ($this->hasErrors()): ?>
+    <p class="error"><?php echo $this->getErrorAsString(); ?></p>
+  <?php endif; ?>
+
+  <select name="<?php echo $this->name; ?>" id="ctrl_<?php echo $this->id; ?>" class="<?php echo $this->class; ?>"<?php echo $this->getAttributes(); ?>>
+    <?php foreach ($this->getOptions() as $option): ?>
+      <?php if ($option['type'] == 'group_start'): ?>
+        <optgroup label="<?php echo $option['label']; ?>">
+      <?php endif; ?>
+
+      <?php if ($option['type'] == 'option'): ?>
+        <option value="<?php echo $option['value']; ?>"<?php echo $option['selected']; ?>><?php echo $option['label']; ?></option>
+      <?php endif; ?>
+
+      <?php if ($option['type'] == 'group_end'): ?>
+        </optgroup>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  </select>
+
+  <?php $GLOBALS['TL_BODY'][] = "<script>
+new ConditionalSelect(document.getElementById('ctrl_" . $this->id . "'), document.getElementById('ctrl_" . $this->conditionField . "'), " . json_encode($this->options) . ", " . json_encode($this->value) . $this->classOptions . ");
+</script>"; ?>
+
+  <?php if ($this->addSubmit): ?>
+    <input type="submit" id="ctrl_<?php echo $this->id; ?>_submit" class="submit" value="<?php echo $this->slabel; ?>">
+  <?php endif; ?>
+<?php $this->endblock(); ?>
