@@ -366,5 +366,73 @@ window.addEvent('domready', function() {
                         $this->getAttributes(),
                         $strOptions) . $this->addSubmit();
     }
+
+    /**
+     * Check whether an input is one of the given options
+     *
+     * @param mixed $varInput The input string or array
+     *
+     * @return boolean True if the selected option exists
+     */
+    protected function isValidOption($varInput)
+    {
+        if (!is_array($varInput))
+        {
+            $varInput = array($varInput);
+        }
+
+        // Check each option
+        foreach ($varInput as $strInput)
+        {
+            $blnFound = false;
+
+            $arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
+
+            foreach ($arrOptions as $v)
+            {
+                // Single dimensional array
+                if (array_key_exists('value', $v))
+                {
+                    if ($strInput == $v['value'])
+                    {
+                        $blnFound = true;
+                    }
+                }
+                // Multi-dimensional array
+                else
+                {
+                    foreach ($v as $vv)
+                    {
+                        // Single dimensional array
+                        if (array_key_exists('value', $vv))
+                        {
+                            if ($strInput == $vv['value'])
+                            {
+                                $blnFound = true;
+                            }
+                        }
+                        // Multi-dimensional array
+                        else
+                        {
+                            foreach ($vv as $vvv)
+                            {
+                                if ($strInput == $vvv['value'])
+                                {
+                                    $blnFound = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!$blnFound)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
