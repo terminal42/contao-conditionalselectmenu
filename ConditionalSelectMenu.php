@@ -188,6 +188,10 @@ window.addEvent('domready', function() {
         // Check each option
         foreach ($varInput as $strInput)
         {
+            if (empty($strInput)) {
+                continue;
+            }
+
             $blnFound = false;
 
             $arrOptions = ConditionalSelectMenu::prepareOptions($this->arrOptions);
