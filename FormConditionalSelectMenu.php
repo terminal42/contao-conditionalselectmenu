@@ -352,7 +352,7 @@ class FormConditionalSelectMenu extends FormSelectMenu
 
         $GLOBALS['TL_BODY'][] = "
 <script>
-window.addEvent('domready', function() {
+window.addEventListener('DOMContentLoaded', function() {
   new ConditionalSelect(document.getElementById('ctrl_" . $this->strId . "'), document.getElementById('ctrl_" . $this->conditionField . "'), " . json_encode($this->arrOptions) . ", " . json_encode($this->varValue) . $strClassOptions . ");
 });
 </script>
