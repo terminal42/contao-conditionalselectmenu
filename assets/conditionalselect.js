@@ -11,9 +11,11 @@
     "use strict";
 
     window.ConditionalSelect = function (element, parent, data, values, options) {
+        var selectDefaultOption = false;
 
         function generateOptions(data, parentNode) {
             var option, i;
+            selectDefaultOption = false;
 
             for (i = 0; i < data.length; i += 1) {
                 option = document.createElement('option');
@@ -22,6 +24,7 @@
 
                 if ((!Array.isArray(values) && data[i]['default'] === 'true') || (Array.isArray(values) && data[i].value && values.indexOf(String(data[i].value)) !== -1)) {
                     option.selected = true;
+                    selectDefaultOption = true;
                 }
 
                 parentNode.appendChild(option);
@@ -102,7 +105,7 @@
                 } else {
                     element.insertBefore(option, element.children[0]);
 
-                    if (!element.value) {
+                    if (!selectDefaultOption) {
                         element.options[0].selected = true;
                     }
                 }
