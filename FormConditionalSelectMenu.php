@@ -50,37 +50,29 @@ class FormConditionalSelectMenu extends FormSelectMenu
                 $this->arrOptions = deserialize($varValue);
 
                 // If value of first option is empty, we assume it's the blank option
-                if ($this->arrOptions[0]['value'] == '') {
-                    if (!$this->includeBlankOption) {
-                        $this->includeBlankOption = true;
+                if (empty($this->arrOptions[0]['value']) && !empty($this->arrOptions[0]['label'])) {
+                    $this->includeBlankOption = true;
 
-                        if ($this->blankOptionLabel == '') {
-                            $this->blankOptionLabel = $this->arrOptions[0]['label'];
-                        }
+                    if (empty($this->blankOptionLabel)) {
+                        $this->blankOptionLabel = $this->arrOptions[0]['label'];
                     }
 
                     array_shift($this->arrOptions);
                 }
 
-                if ($this->arrOptions[0]['group'])
-                {
+                if ($this->arrOptions[0]['group']) {
                     $arrValue = array();
                     $arrOptions = array();
                     $strOptionKey = '';
 
-                    foreach ($this->arrOptions as $arrOption)
-                    {
-                        if ($arrOption['group'])
-                        {
+                    foreach ($this->arrOptions as $arrOption) {
+                        if ($arrOption['group']) {
                             $strOptionKey = $arrOption['value'];
-                        }
-                        else
-                        {
+                        } else {
                             $arrOptions[$strOptionKey][] = $arrOption;
                         }
 
-                        if ($arrOption['default'])
-                        {
+                        if ($arrOption['default']) {
                             $arrValue[] = $arrOption['value'];
                         }
                     }
