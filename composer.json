@@ -11,9 +11,9 @@
         }
     ],
     "require":{
-        "php":">=5.3.2",
-        "contao/core-bundle":"~3.2 || ~4.1",
-        "contao-community-alliance/composer-plugin":"~2.4 || ~3.0"
+        "php":"^7.0 || ^8.0",
+        "contao/core-bundle":"^.9",
+        "contao-community-alliance/composer-plugin": "^2.4 || ^3.0"
     },
     "replace": {
         "contao-legacy/conditionalselectmenu": "self.version"
