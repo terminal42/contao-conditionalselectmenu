@@ -63,11 +63,11 @@ class ConditionalSelectMenu extends SelectMenu
 
 		// Get labels from parent select menu
 		$arrParentOptions = array();
-		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference']))
+		if (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'] ?? null))
 		{
 			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
 		}
-		elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options']))
+		elseif (is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'] ?? null))
 		{
 			$arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
 		}
@@ -84,7 +84,7 @@ class ConditionalSelectMenu extends SelectMenu
 				continue;
 			}
 
-			$strGroup = strlen($arrParentOptions[$strKey]) ? $arrParentOptions[$strKey] : $strKey;
+			$strGroup = $arrParentOptions[$strKey] ?? $strKey;
 			$arrOptgroups = array();
 
 			foreach ($arrOption as $kk => $arrOptgroup)
