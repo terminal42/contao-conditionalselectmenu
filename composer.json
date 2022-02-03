@@ -1,32 +1,50 @@
 {
-    "name":"terminal42/contao-conditionalselectmenu",
-    "description":"conditional select menu extension for Contao Open Source CMS",
-    "keywords":["form", "select", "conditional", "contao"],
-    "type":"contao-module",
-    "license":"LGPL-3.0+",
-    "authors":[
+    "name": "terminal42/contao-conditionalselectmenu",
+    "description": "conditional select menu extension for Contao Open Source CMS",
+    "keywords": ["form", "select", "conditional", "contao"],
+    "type": "contao-bundle",
+    "license": "MIT",
+    "authors": [
         {
-            "name":"terminal42 gmbh",
-            "homepage":"http://terminal42.ch"
+            "name": "terminal42 gmbh",
+            "homepage": "https://www.terminal42.ch"
         }
     ],
-    "require":{
-        "php":"^7.0 || ^8.0",
-        "contao/core-bundle":"^.9",
-        "contao-community-alliance/composer-plugin": "^2.4 || ^3.0"
-    },
-    "replace": {
-        "contao-legacy/conditionalselectmenu": "self.version"
-    },
-    "extra":{
-        "branch-alias": {
-            "dev-master": "3.0.x-dev",
-            "dev-develop": "3.0.x-dev"
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/terminal42"
         },
-        "contao": {
-            "sources":{
-                "": "system/modules/conditionalselectmenu"
-            }
+        {
+            "type": "other",
+            "url": "https://ko-fi.com/terminal42"
         }
+    ],
+    "support": {
+        "issues": "https://github.com/terminal42/contao-conditionalselectmenu/issues",
+        "source": "https://github.com/terminal42/contao-conditionalselectmenu"
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-json": "*",
+        "contao/core-bundle": "^4.9",
+        "doctrine/dbal": "^2.11 || ^3"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Terminal42\\ConditionalSelectMenuBundle\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Terminal42\\ConditionalSelectMenuBundle\\ContaoManager\\Plugin"
+    },
+    "scripts": {
+        "cs-fixer": "tools/ecs/vendor/bin/ecs check src/ --fix --ansi"
     }
 }
