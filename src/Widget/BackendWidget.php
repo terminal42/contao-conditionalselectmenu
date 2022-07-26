@@ -95,6 +95,8 @@ class BackendWidget extends SelectMenu
             }
         }
 
+        $strClassOptions = '';
+
         // Prepare Javascript
         if ($this->includeBlankOption) {
             $strClassOptions = ', {includeBlankOption: true'.($this->blankOptionLabel ? (", blankOptionLabel: '".$this->blankOptionLabel."'") : '').'}';
