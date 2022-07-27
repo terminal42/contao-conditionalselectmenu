@@ -133,9 +133,9 @@ class FrontendWidget extends FormSelectMenu
         // Get labels from parent select menu
         $arrParentOptions = [];
 
-        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'])) {
+        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'] ?? null)) {
             $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
-        } elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'])) {
+        } elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'] ?? null)) {
             $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
         }
 
@@ -235,7 +235,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 $arrOptions[] = [
                     'type' => 'option',
                     'value' => StringUtil::specialchars($arrOption['value']),
-                    'label' => $arrOption['label'],
+                    'label' => $arrOption['label'] ?? $arrOption['value'],
                     'selected' => \in_array($arrOption['value'], $this->varValue, true),
                 ];
 
@@ -261,7 +261,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     $arrOptions[] = [
                         'type' => 'option',
                         'value' => StringUtil::specialchars($arrOptgroup['value']),
-                        'label' => $arrOptgroup['label'],
+                        'label' => $arrOptgroup['label'] ?? $arrOptgroup['value'],
                         'selected' => \in_array($arrOptgroup['value'], $this->varValue, true),
                     ];
 
