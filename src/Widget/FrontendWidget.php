@@ -35,19 +35,19 @@ class FrontendWidget extends FormSelectMenu
                     array_shift($this->arrOptions);
                 }
 
-                if ($this->arrOptions[0]['group']) {
+                if ($this->arrOptions[0]['group'] ?? false) {
                     $arrValue = [];
                     $arrOptions = [];
                     $strOptionKey = '';
 
                     foreach ($this->arrOptions as $arrOption) {
-                        if ($arrOption['group']) {
+                        if ($arrOption['group'] ?? false) {
                             $strOptionKey = $arrOption['value'];
                         } else {
                             $arrOptions[$strOptionKey][] = $arrOption;
                         }
 
-                        if ($arrOption['default']) {
+                        if ($arrOption['default'] ?? false) {
                             $arrValue[] = $arrOption['value'];
                         }
                     }
