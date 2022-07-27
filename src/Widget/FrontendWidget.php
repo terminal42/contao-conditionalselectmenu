@@ -221,9 +221,9 @@ window.addEventListener('DOMContentLoaded', function() {
         $arrParentOptions = [];
 
         // Get labels from parent select menu
-        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'])) {
+        if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'] ?? null)) {
             $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['reference'];
-        } elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'])) {
+        } elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'] ?? null)) {
             $arrParentOptions = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->conditionField]['options'];
         }
 
