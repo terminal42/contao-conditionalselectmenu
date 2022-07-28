@@ -38,6 +38,8 @@ class BackendWidget extends SelectMenu
             $this->varValue = [$this->varValue];
         }
 
+        array_map('strval', $this->varValue);
+
         // Get labels from parent select menu
         $arrParentOptions = [];
 
@@ -161,7 +163,7 @@ window.addEvent('domready', function() {
             foreach ($arrOptions as $v) {
                 // Single dimensional array
                 if (\array_key_exists('value', $v)) {
-                    if ($strInput === $v['value']) {
+                    if ((string) $strInput === (string) $v['value']) {
                         $blnFound = true;
                     }
                 } // Multi-dimensional array
@@ -169,13 +171,13 @@ window.addEvent('domready', function() {
                     foreach ($v as $vv) {
                         // Single dimensional array
                         if (\array_key_exists('value', $vv)) {
-                            if ($strInput === $vv['value']) {
+                            if ((string) $strInput === (string) $vv['value']) {
                                 $blnFound = true;
                             }
                         } // Multi-dimensional array
                         else {
                             foreach ($vv as $vvv) {
-                                if ($strInput === $vvv['value']) {
+                                if ((string) $strInput === (string) $vvv['value']) {
                                     $blnFound = true;
                                 }
                             }

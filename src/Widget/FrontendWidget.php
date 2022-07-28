@@ -130,6 +130,8 @@ class FrontendWidget extends FormSelectMenu
             $this->varValue = [$this->varValue];
         }
 
+        array_map('strval', $this->varValue);
+
         // Get labels from parent select menu
         $arrParentOptions = [];
 
@@ -217,6 +219,8 @@ window.addEventListener('DOMContentLoaded', function() {
         if (!\is_array($this->varValue)) {
             $this->varValue = [$this->varValue];
         }
+
+        array_map('strval', $this->varValue);
 
         $arrParentOptions = [];
 
@@ -316,7 +320,7 @@ window.addEventListener('DOMContentLoaded', function() {
             foreach ($arrOptions as $v) {
                 // Single dimensional array
                 if (\array_key_exists('value', $v)) {
-                    if ($strInput === $v['value']) {
+                    if ((string) $strInput === (string) $v['value']) {
                         $blnFound = true;
                     }
                 } // Multi-dimensional array
@@ -324,13 +328,13 @@ window.addEventListener('DOMContentLoaded', function() {
                     foreach ($v as $vv) {
                         // Single dimensional array
                         if (\array_key_exists('value', $vv)) {
-                            if ($strInput === $vv['value']) {
+                            if ((string) $strInput === (string) $vv['value']) {
                                 $blnFound = true;
                             }
                         } // Multi-dimensional array
                         else {
                             foreach ($vv as $vvv) {
-                                if ($strInput === $vvv['value']) {
+                                if ((string) $strInput === (string) $vvv['value']) {
                                     $blnFound = true;
                                 }
                             }
