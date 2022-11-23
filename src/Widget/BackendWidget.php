@@ -113,14 +113,14 @@ window.addEvent('domready', function() {
 ';
 
         return sprintf(
-            '<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
-            $this->strName,
-            $this->strId,
-            $strClass,
-            $this->strClass ? ' '.$this->strClass : '',
-            $this->getAttributes(),
-            $strOptions
-        ).$strOptionsJS;
+                '<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
+                $this->strName,
+                $this->strId,
+                $strClass,
+                $this->strClass ? ' '.$this->strClass : '',
+                $this->getAttributes(),
+                $strOptions
+            ).$strOptionsJS;
     }
 
     public static function prepareOptions($arrGroups): array
@@ -136,7 +136,10 @@ window.addEvent('domready', function() {
                         }
                     }
                 } else {
-                    $option['value'] = (string) ($option['value'] ?? '');
+                    if (\is_array($option) && isset($option['value'])) {
+                        $option['value'] = (string) $option['value'];
+                    }
+
                     $arrNewOptions[$group][$k] = $option;
                 }
             }
