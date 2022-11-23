@@ -220,7 +220,7 @@ window.addEventListener('DOMContentLoaded', function() {
             $this->varValue = [$this->varValue];
         }
 
-        array_map('strval', $this->varValue);
+        $this->varValue = array_map('strval', $this->varValue);
 
         $arrParentOptions = [];
 
@@ -314,13 +314,14 @@ window.addEventListener('DOMContentLoaded', function() {
         // Check each option
         foreach ($varInput as $strInput) {
             $blnFound = false;
+            $strInput = (string) $strInput;
 
             $arrOptions = BackendWidget::prepareOptions($this->arrOptions);
 
             foreach ($arrOptions as $v) {
                 // Single dimensional array
                 if (\array_key_exists('value', $v)) {
-                    if ((string) $strInput === (string) $v['value']) {
+                    if ($strInput === $v['value']) {
                         $blnFound = true;
                     }
                 } // Multi-dimensional array
@@ -328,13 +329,13 @@ window.addEventListener('DOMContentLoaded', function() {
                     foreach ($v as $vv) {
                         // Single dimensional array
                         if (\array_key_exists('value', $vv)) {
-                            if ((string) $strInput === (string) $vv['value']) {
+                            if ($strInput === $vv['value']) {
                                 $blnFound = true;
                             }
                         } // Multi-dimensional array
                         else {
                             foreach ($vv as $vvv) {
-                                if ((string) $strInput === (string) $vvv['value']) {
+                                if ($strInput === $vvv['value']) {
                                     $blnFound = true;
                                 }
                             }

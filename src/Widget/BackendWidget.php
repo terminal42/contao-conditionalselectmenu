@@ -38,7 +38,7 @@ class BackendWidget extends SelectMenu
             $this->varValue = [$this->varValue];
         }
 
-        array_map('strval', $this->varValue);
+        $this->varValue = array_map('strval', $this->varValue);
 
         // Get labels from parent select menu
         $arrParentOptions = [];
@@ -132,10 +132,11 @@ window.addEvent('domready', function() {
                 if (\is_array($option) && \is_array($option['label'])) {
                     foreach ($option['label'] as $optionGroup => $arrLabels) {
                         foreach ($arrLabels as $kk => $label) {
-                            $arrNewOptions[$group][$optionGroup][] = ['value' => $kk, 'label' => $label];
+                            $arrNewOptions[$group][$optionGroup][] = ['value' => (string) $kk, 'label' => $label];
                         }
                     }
                 } else {
+                    $option['value'] = (string) ($option['value'] ?? '');
                     $arrNewOptions[$group][$k] = $option;
                 }
             }
@@ -156,6 +157,7 @@ window.addEvent('domready', function() {
                 continue;
             }
 
+            $strInput = (string) $strInput;
             $blnFound = false;
 
             $arrOptions = self::prepareOptions($this->arrOptions);
@@ -163,7 +165,7 @@ window.addEvent('domready', function() {
             foreach ($arrOptions as $v) {
                 // Single dimensional array
                 if (\array_key_exists('value', $v)) {
-                    if ((string) $strInput === (string) $v['value']) {
+                    if ($strInput === $v['value']) {
                         $blnFound = true;
                     }
                 } // Multi-dimensional array
@@ -171,13 +173,13 @@ window.addEvent('domready', function() {
                     foreach ($v as $vv) {
                         // Single dimensional array
                         if (\array_key_exists('value', $vv)) {
-                            if ((string) $strInput === (string) $vv['value']) {
+                            if ($strInput === $vv['value']) {
                                 $blnFound = true;
                             }
                         } // Multi-dimensional array
                         else {
                             foreach ($vv as $vvv) {
-                                if ((string) $strInput === (string) $vvv['value']) {
+                                if ($strInput === $vvv['value']) {
                                     $blnFound = true;
                                 }
                             }
