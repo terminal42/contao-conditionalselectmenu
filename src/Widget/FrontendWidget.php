@@ -4,10 +4,33 @@ declare(strict_types=1);
 
 namespace Terminal42\ConditionalSelectMenuBundle\Widget;
 
+use Contao\FormSelect;
 use Contao\FormSelectMenu;
 use Contao\StringUtil;
+use Contao\Widget;
 
-class FrontendWidget extends FormSelectMenu
+if (class_exists(FormSelect::class)) {
+    abstract class FormSelectParent extends FormSelect
+    {
+    }
+} else {
+    abstract class FormSelectParent extends FormSelectMenu
+    {
+    }
+
+    // Makes phpstan happy ¯\_(ツ)_/¯
+    if (!class_exists(FormSelectMenu::class)) {
+        abstract class FormSelectMenu extends Widget
+        {
+        }
+    }
+}
+
+/**
+ * @property string $conditionField
+ * @property string $classOptions
+ */
+class FrontendWidget extends FormSelectParent
 {
     protected $strTemplate = 'form_conditionalselect';
 
@@ -15,7 +38,6 @@ class FrontendWidget extends FormSelectMenu
      * Add specific attributes.
      *
      * @param string $strKey
-     * @param mixed  $varValue
      */
     public function __set($strKey, $varValue): void
     {
@@ -63,6 +85,9 @@ class FrontendWidget extends FormSelectMenu
         }
     }
 
+    /**
+     * @param array<string, mixed> $arrAttributes
+     */
     public function parse($arrAttributes = null): string
     {
         $this->arrOptions = BackendWidget::prepareOptions($this->arrOptions);
@@ -143,11 +168,11 @@ class FrontendWidget extends FormSelectMenu
 
         foreach ($this->arrOptions as $strKey => $arrOption) {
             if (\array_key_exists('value', $arrOption)) {
-                $strOptions .= sprintf(
+                $strOptions .= \sprintf(
                     '<option value="%s"%s>%s</option>',
                     StringUtil::specialchars($arrOption['value']),
-                    (\in_array($arrOption['value'], $this->varValue, true) ? ' selected="selected"' : ''),
-                    $arrOption['label']
+                    \in_array($arrOption['value'], $this->varValue, true) ? ' selected="selected"' : '',
+                    $arrOption['label'],
                 );
 
                 continue;
@@ -158,11 +183,11 @@ class FrontendWidget extends FormSelectMenu
 
             foreach ($arrOption as $kk => $arrOptgroup) {
                 if (\array_key_exists('value', $arrOptgroup)) {
-                    $arrOptgroups[] = sprintf(
+                    $arrOptgroups[] = \sprintf(
                         '<option value="%s"%s>%s</option>',
                         StringUtil::specialchars($arrOptgroup['value']),
-                        (\in_array($arrOptgroup['value'], $this->varValue, true) ? ' selected="selected"' : ''),
-                        $arrOptgroup['label']
+                        \in_array($arrOptgroup['value'], $this->varValue, true) ? ' selected="selected"' : '',
+                        $arrOptgroup['label'],
                     );
 
                     continue;
@@ -171,23 +196,25 @@ class FrontendWidget extends FormSelectMenu
                 $arrSubgroups = [];
 
                 foreach ($arrOptgroup as $arrSubgroup) {
-                    $arrSubgroups[] = sprintf(
+                    $arrSubgroups[] = \sprintf(
                         '<option value="%s"%s>%s</option>',
                         StringUtil::specialchars($arrSubgroup['value']),
-                        (\in_array($arrSubgroup['value'], $this->varValue, true) ? ' selected="selected"' : ''),
-                        $arrSubgroup['label']
+                        \in_array($arrSubgroup['value'], $this->varValue, true) ? ' selected="selected"' : '',
+                        $arrSubgroup['label'],
                     );
                 }
 
                 if (!empty($arrSubgroups)) {
-                    $strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup.' – '.$kk), implode('', $arrSubgroups));
+                    $strOptions .= \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup.' – '.$kk), implode('', $arrSubgroups));
                 }
             }
 
             if (!empty($arrOptgroups)) {
-                $strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup), implode('', $arrOptgroups));
+                $strOptions .= \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup), implode('', $arrOptgroups));
             }
         }
+
+        $strClassOptions = '';
 
         // Prepare Javascript
         if ($this->includeBlankOption) {
@@ -202,17 +229,25 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 ';
 
-        return sprintf(
+        return \sprintf(
             '<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
             $this->strName,
             $this->strId,
             $strClass,
             $this->strClass ? ' '.$this->strClass : '',
             $this->getAttributes(),
-            $strOptions
+            $strOptions,
         );
     }
 
+    /**
+     * @return array<array{
+     *     type: string,
+     *     value?: string,
+     *     label?: string,
+     *     selected?: bool,
+     * }>
+     */
     protected function getOptions(): array
     {
         // Make sure values is an array

@@ -20,13 +20,16 @@ class ConditionFieldOptionsListener
         $this->connection = $connection;
     }
 
+    /**
+     * @return array<int|string, string>
+     */
     public function __invoke(DataContainer $dc): array
     {
         $options = [];
 
         $fields = $this->connection->fetchAllAssociative(
             'SELECT id, name FROM tl_form_field WHERE pid=(SELECT pid FROM tl_form_field WHERE id=?) AND id!=? AND (type=? OR type=?)',
-            [$dc->id, $dc->id, 'select', 'conditionalselect']
+            [$dc->id, $dc->id, 'select', 'conditionalselect'],
         );
 
         foreach ($fields as $field) {

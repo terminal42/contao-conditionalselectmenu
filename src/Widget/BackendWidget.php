@@ -7,6 +7,9 @@ namespace Terminal42\ConditionalSelectMenuBundle\Widget;
 use Contao\SelectMenu;
 use Contao\StringUtil;
 
+/**
+ * @property string $conditionField
+ */
 class BackendWidget extends SelectMenu
 {
     public function generate(): string
@@ -51,11 +54,11 @@ class BackendWidget extends SelectMenu
 
         foreach ($this->arrOptions as $strKey => $arrOption) {
             if (\array_key_exists('value', $arrOption)) {
-                $strOptions .= sprintf(
+                $strOptions .= \sprintf(
                     '<option value="%s"%s>%s</option>',
                     StringUtil::specialchars($arrOption['value']),
-                    (\in_array($arrOption['value'], $this->varValue, true) ? ' selected="selected"' : ''),
-                    $arrOption['label']
+                    \in_array($arrOption['value'], $this->varValue, true) ? ' selected="selected"' : '',
+                    $arrOption['label'],
                 );
 
                 continue;
@@ -66,11 +69,11 @@ class BackendWidget extends SelectMenu
 
             foreach ($arrOption as $kk => $arrOptgroup) {
                 if (\array_key_exists('value', $arrOptgroup)) {
-                    $arrOptgroups[] = sprintf(
+                    $arrOptgroups[] = \sprintf(
                         '<option value="%s"%s>%s</option>',
                         StringUtil::specialchars($arrOptgroup['value']),
-                        (\in_array($arrOptgroup['value'], $this->varValue, true) ? ' selected="selected"' : ''),
-                        $arrOptgroup['label']
+                        \in_array($arrOptgroup['value'], $this->varValue, true) ? ' selected="selected"' : '',
+                        $arrOptgroup['label'],
                     );
 
                     continue;
@@ -79,21 +82,21 @@ class BackendWidget extends SelectMenu
                 $arrSubgroups = [];
 
                 foreach ($arrOptgroup as $arrSubgroup) {
-                    $arrSubgroups[] = sprintf(
+                    $arrSubgroups[] = \sprintf(
                         '<option value="%s"%s>%s</option>',
                         StringUtil::specialchars($arrSubgroup['value']),
-                        (\in_array($arrSubgroup['value'], $this->varValue, true) ? ' selected="selected"' : ''),
-                        $arrSubgroup['label']
+                        \in_array($arrSubgroup['value'], $this->varValue, true) ? ' selected="selected"' : '',
+                        $arrSubgroup['label'],
                     );
                 }
 
                 if (!empty($arrSubgroups)) {
-                    $strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup.' – '.$kk), implode('', $arrSubgroups));
+                    $strOptions .= \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup.' – '.$kk), implode('', $arrSubgroups));
                 }
             }
 
             if (!empty($arrOptgroups)) {
-                $strOptions .= sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup), implode('', $arrOptgroups));
+                $strOptions .= \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strGroup), implode('', $arrOptgroups));
             }
         }
 
@@ -112,18 +115,32 @@ window.addEvent('domready', function() {
 </script>
 ';
 
-        return sprintf(
-                '<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
-                $this->strName,
-                $this->strId,
-                $strClass,
-                $this->strClass ? ' '.$this->strClass : '',
-                $this->getAttributes(),
-                $strOptions
-            ).$strOptionsJS;
+        return \sprintf(
+            '<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
+            $this->strName,
+            $this->strId,
+            $strClass,
+            $this->strClass ? ' '.$this->strClass : '',
+            $this->getAttributes(),
+            $strOptions,
+        ).$strOptionsJS;
     }
 
-    public static function prepareOptions($arrGroups): array
+    /**
+     * @param array<string, array{
+     *     value: string,
+     *     label: string|array{
+     *         value: string,
+     *         label: string,
+     *     }
+     * }> $arrGroups
+     *
+     * @return array<string, array{
+     *     value: string,
+     *     label: string
+     * }>
+     */
+    public static function prepareOptions(array $arrGroups): array
     {
         $arrNewOptions = [];
 
