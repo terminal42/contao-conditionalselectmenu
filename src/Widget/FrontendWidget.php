@@ -4,27 +4,7 @@ declare(strict_types=1);
 
 namespace Terminal42\ConditionalSelectMenuBundle\Widget;
 
-use Contao\FormSelect;
-use Contao\FormSelectMenu;
 use Contao\StringUtil;
-use Contao\Widget;
-
-if (class_exists(FormSelect::class)) {
-    abstract class FormSelectParent extends FormSelect
-    {
-    }
-} else {
-    abstract class FormSelectParent extends FormSelectMenu
-    {
-    }
-
-    // Makes phpstan happy ¯\_(ツ)_/¯
-    if (!class_exists(FormSelectMenu::class)) {
-        abstract class FormSelectMenu extends Widget
-        {
-        }
-    }
-}
 
 /**
  * @property string $conditionField
@@ -44,7 +24,7 @@ class FrontendWidget extends FormSelectParent
         switch ($strKey) {
             // convert array from optionwizard to treedimensional array
             case 'options':
-                $this->arrOptions = StringUtil::deserialize($varValue);
+                $this->arrOptions = StringUtil::deserialize($varValue, true);
 
                 // If value of first option is empty, we assume it's the blank option
                 if (empty($this->arrOptions[0]['value']) && !empty($this->arrOptions[0]['label'])) {
