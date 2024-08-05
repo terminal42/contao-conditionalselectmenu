@@ -72,7 +72,7 @@ class FrontendWidget extends FormSelectParent
     {
         $this->arrOptions = BackendWidget::prepareOptions($this->arrOptions);
 
-        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'bundles/terminal42conditionalselectmenu/conditionalselect.min.js';
+        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'bundles/terminal42conditionalselectmenu/conditionalselect.js';
 
         $strClass = 'select';
 
@@ -110,7 +110,7 @@ class FrontendWidget extends FormSelectParent
     {
         $this->arrOptions = BackendWidget::prepareOptions($this->arrOptions);
 
-        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'bundles/terminal42conditionalselectmenu/conditionalselect.min.js';
+        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'bundles/terminal42conditionalselectmenu/conditionalselect.js';
 
         $strOptions = '';
         $strClass = 'select';

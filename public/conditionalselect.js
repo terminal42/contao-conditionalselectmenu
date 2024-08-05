@@ -3,6 +3,7 @@
 
     window.ConditionalSelect = function (element, parent, data, values, options) {
         var selectDefaultOption = false;
+        let chosen;
 
         function generateOptions(data, parentNode) {
             var option, i;
@@ -99,6 +100,14 @@
                     if (!selectDefaultOption) {
                         element.options[0].selected = true;
                     }
+                }
+            }
+
+            if (element.classList.contains('tl_conditionalselect_chosen')) {
+                if (chosen) {
+                    chosen.results_build();
+                } else {
+                    chosen = new Chosen(element);
                 }
             }
 

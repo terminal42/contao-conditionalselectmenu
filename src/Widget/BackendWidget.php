@@ -16,7 +16,7 @@ class BackendWidget extends SelectMenu
     {
         $this->arrOptions = self::prepareOptions($this->arrOptions);
 
-        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'bundles/terminal42conditionalselectmenu/conditionalselect.min.js';
+        $GLOBALS['TL_JAVASCRIPT']['conditionalselect'] = 'bundles/terminal42conditionalselectmenu/conditionalselect.js';
 
         $strOptions = '';
         $strClass = 'tl_select';
@@ -114,6 +114,10 @@ window.addEvent('domready', function() {
 });
 </script>
 ';
+
+        if ($this->chosen) {
+            $strClass .= ' tl_conditionalselect_chosen';
+        }
 
         return \sprintf(
             '<select name="%s" id="ctrl_%s" class="%s%s"%s>%s</select>',
