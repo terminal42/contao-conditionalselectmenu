@@ -25,7 +25,7 @@
     <?php endforeach; ?>
   </select>
 
-  <?php $GLOBALS['TL_BODY'][] = "<script>
+  <?php $GLOBALS['TL_BODY'][] = '<script'.$this->attr()->setIfExists('nonce', $this->nonce('script-src')).">
 new ConditionalSelect(document.getElementById('ctrl_".$this->id."'), document.getElementById('ctrl_".$this->conditionField."'), ".json_encode($this->options).', '.json_encode($this->value).$this->classOptions.');
 </script>'; ?>
 
